@@ -26,9 +26,13 @@
       "package": "com.showup.app"
     },
     "plugins": [
-      "expo-web-browser",
-      "@react-native-google-signin/google-signin",
-      "@react-native-community/datetimepicker"
+      [
+        "expo-location",
+        {
+          "isAndroidBackgroundLocationEnabled": false,
+          "locationWhenInUsePermission": "Showup uses your location to find plans near you on campus."
+        }
+      ]
     ]
   }
 }

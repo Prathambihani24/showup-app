@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 
 const CATEGORIES = [
   { label: 'Food', emoji: '🍜' },

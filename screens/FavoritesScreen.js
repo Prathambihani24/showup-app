@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 import { getCurrentUser } from '../lib/user';
 
 export default function FavoritesScreen() {

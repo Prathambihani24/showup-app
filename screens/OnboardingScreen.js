@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 
 const VIBES = ['☕ Food', '🏸 Sport', '🧋 Chill', '🚗 Vibe', '📚 Study', '🎮 Gaming', '🎵 Music', '🎬 Movie'];
 

@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 import { getCurrentUser } from '../lib/user';
 import { fetchPlansNearMe, formatDistance, BVCOE_CAMPUS, calculateDistanceKm } from '../lib/spatial-queries';
 
