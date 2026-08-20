@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Showup Test</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body, #root { height: 100%; margin: 0; }
+    #root { display: flex; flex-direction: column; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@19/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    
+    const styles = {
+      container: { flex: 1, backgroundColor: '#FAFAFA', display: 'flex', flexDirection: 'column' },
+      header: { padding: '20px', borderBottom: '1px solid #F0F0F0', backgroundColor: '#fff' },
+      title: { fontSize: 32, fontWeight: 900, color: '#0a0a0a', letterSpacing: '-1.5px' },
+      dot: { color: '#7C3AED' },
+      content: { flex: 1, padding: '20px', overflow: 'auto' },
+      card: { backgroundColor: '#fff', borderRadius: 20, marginBottom: 14, padding: 16, 
+        boxShadow: '0 4px 16px rgba(0,0,0,0.06)', border: '1px solid #F5F5F5' },
+      cardTop: { display: 'flex', alignItems: 'center', marginBottom: 12 },
+      avatar: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#F3EEFF', 
+        display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 10 },
+      avatarText: { color: '#7C3AED', fontWeight: 800, fontSize: 17 },
+      cardName: { color: '#0a0a0a', fontWeight: 700, fontSize: 14 },
+      cardLocation: { color: '#999', fontSize: 12, marginTop: 1 },
+      cardActivity: { color: '#0a0a0a', fontSize: 19, fontWeight: 800, marginBottom: 14 },
+      cardBottom: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+      pill: { backgroundColor: '#F5F5F5', borderRadius: 10, padding: '5px 10px' },
+      pillText: { color: '#888', fontSize: 11, fontWeight: 600 },
+      joinBtn: { backgroundColor: '#7C3AED', borderRadius: 12, padding: '10px 18px', color: '#fff', 
+        fontWeight: 800, fontSize: 13, border: 'none', cursor: 'pointer' },
+    };
+    
+    function PlanCard({ plan }) {
+      return React.createElement('div', { style: styles.card },
+        React.createElement('div', { style: styles.cardTop },
+          React.createElement('div', { style: styles.avatar },
+            React.createElement('span', { style: styles.avatarText }, plan.user_name[0].toUpperCase())
+          ),
+          React.createElement('div', null,
+            React.createElement('div', { style: styles.cardName }, plan.user_name),
+            React.createElement('div', { style: styles.cardLocation }, '📍 ' + plan.location_name)
+          )
+        ),
+        React.createElement('div', { style: styles.cardActivity }, plan.activity),
+        React.createElement('div', { style: styles.cardBottom },
+          React.createElement('div', { style: { display: 'flex', gap: 6 } },
+            React.createElement('div', { style: styles.pill },
+              React.createElement('span', { style: styles.pillText }, '⏰ ' + plan.time_label)
+            ),
+            React.createElement('div', { style: styles.pill },
+              React.createElement('span', { style: styles.pillText }, '👥 ' + plan.spots_left + ' spots')
+            )
+          ),
+          React.createElement('button', { style: styles.joinBtn }, "i'm in")
+        )
+      );
+    }
+    
+    function HomeScreen() {
+      const [plans] = useState([
+        { id: 1, user_name: 'Rahul', location_name: 'BVCOE Canteen', activity: 'Chai break ☕', time_label: 'Right now', spots_left: 3 },
+        { id: 2, user_name: 'Priya', location_name: 'Library', activity: 'Study session 📚', time_label: 'In 30 mins', spots_left: 4 },
+        { id: 3, user_name: 'Amit', location_name: 'Basketball Court', activity: '3v3 basketball 🏀', time_label: 'Tonight', spots_left: 2 },
+        { id: 4, user_name: 'Sneha', location_name: 'Mess', activity: 'Dinner squad 🍛', time_label: 'In 1 hour', spots_left: 1 },
+      ]);
+      
+      return React.createElement('div', { style: styles.container },
+        React.createElement('div', { style: styles.header },
+          React.createElement('h1', { style: styles.title }, 
+            'showup', React.createElement('span', { style: styles.dot }, '.')
+          )
+        ),
+        React.createElement('div', { style: styles.content },
+          plans.map(p => React.createElement(PlanCard, { key: p.id, plan: p }))
+        )
+      );
+    }
+    
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(HomeScreen));
+  </script>
+</body>
+</html>
