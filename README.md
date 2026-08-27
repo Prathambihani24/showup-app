@@ -1,301 +1,127 @@
-# 🎯 Showup — Campus Plans That Actually Happen
+<div align="center">
+  <img src="assets/logo.png" alt="showup logo" width="200"/>
+  
+  # showup.
+  
+  **Drop a plan. Nearby students join before spots fill.**
+  
+  [![Expo](https://img.shields.io/badge/Expo-54-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
+  [![React Native](https://img.shields.io/badge/React_Native-0.81-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev)
+  [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+  [![License](https://img.shields.io/badge/License-MIT-FFD700?style=for-the-badge)](LICENSE)
 
-> **Drop a plan. Nearby students join before spots fill. No group chat noise.**
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Expo-54-000020?style=for-the-badge&logo=expo&logoColor=white" />
-  <img src="https://img.shields.io/badge/React%20Native-0.81-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostGIS-Spatial-4287F5?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/License-MIT-FFD700?style=for-the-badge" />
-</p>
-
-<p align="center">
-  <a href="#-live-demo">Live Demo</a> •
-  <a href="#-architecture">Architecture</a> •
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-api-rpc">RPC Reference</a> •
-  <a href="#-deployment">Deploy</a>
-</p>
+  [Join Waitlist](#-waitlist) • [Architecture](#-architecture) • [Quick Start](#-quick-start)
+</div>
 
 ---
 
-## 🎬 The Problem
+## The Problem
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  📱  15,000 students. 200m apart. Same boring evening.         │
-│                                                                  │
-│  Group chats die. Plans stay abstract.                         │
-│  "Who's down?" → 47 replies → 3 show up.                       │
-└─────────────────────────────────────────────────────────────────┘
-```
+Every college student has this moment multiple times a week.
 
-## ✨ The Solution
+> Free. Bored. Open WhatsApp. Send "anyone free?" Get 3 replies. Plan dies.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  🚀  Drop a plan → Nearby students see it instantly →          │
-│      Tap join → Spots fill → Chat opens → People stand there.  │
-└─────────────────────────────────────────────────────────────────┘
-```
+WhatsApp fails for spontaneous plans because it only works within closed networks. There is no app in India that enables low-friction spontaneous plans with people outside your existing group — built for college students in tier-2 cities.
 
-**Showup** is a hyperlocal campus app that turns "who's down?" into real plans with real people.
+## The Solution
 
-| Feature | What It Does |
-|---------|--------------|
-| ⚡ **Live Feed** | Plans within 5km, sorted by distance, expire in hours |
-| 🎯 **Spot-Limited** | Creator sets spots (1–20). Full = gone. FOMO does the pushing. |
-| 💬 **Auto-Chat** | Opens the moment someone joins. No "where is ground 2?" confusion. |
-| 🏷️ **Categories** | Food 🍜 • Sport 🏸 • Chill 🧋 • Study 📚 • Vibe 🚗 • Gaming 🎮 |
-| 📍 **Campus-Verified** | Only `.edu` emails from BVCOE, MIT WPU, Indira, Sinhgad |
-| 🔗 **Referral Queue** | Waitlist position jumps when friends join via your link |
+showup. is a live feed of spontaneous plans near you right now.
+
+Open the app → see what is happening within 5km → tap "i'm in" → show up.
+
+Or drop your own plan in 30 seconds and watch who joins.
 
 ---
 
-## 🏗️ Architecture
+## Screenshots
+
+<!-- Add 3-4 real screenshots here -->
+| Home Feed | Drop a Plan | Profile |
+|---|---|---|
+| ![feed](screenshots/feed.png) | ![create](screenshots/create.png) | ![profile](screenshots/profile.png) |
+
+---
+
+## Features
+
+| Feature | Description |
+|---|---|
+| ⚡ Live Feed | Real-time plans within 50km sorted by GPS distance |
+| 🎯 Spot Limited | Creator sets spots 1-20. Full = gone. |
+| 📍 Location First | Real GPS coordinates, Haversine distance per card |
+| ❤️ Save Plans | Bookmark plans for later |
+| 🚩 Report | Flag inappropriate plans |
+| 🔍 Search + Filter | By category or location name |
+
+## Tech Stack
+
+- **Frontend:** React Native + Expo SDK 54
+- **Backend:** Supabase (PostgreSQL + Auth + Real-time)
+- **Location:** expo-location + Haversine formula
+- **Navigation:** React Navigation v6
+- **Storage:** AsyncStorage
+
+## Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                           CLIENT (Expo + React Native)                │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐   │
-│  │ Home    │  │ Create  │  │ Chat    │  │ Favs    │  │ Profile │   │
-│  │ Feed    │  │ Plan    │  │ Realtime│  │ Saved   │  │ Settings│   │
-│  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘   │
-└───────┼────────────┼────────────┼────────────┼────────────┼────────┘
-        │            │            │            │            │
-        ▼            ▼            ▼            ▼            ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                        SUPABASE BACKEND                                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────┐  │
-│  │ PostgreSQL   │  │ PostGIS      │  │ Realtime     │  │ Auth     │  │
-│  │ + RLS        │  │ GiST Indexes │  │ (plan_msgs)  │  │ (OTP)    │  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └────┬─────┘  │
-│         │                 │                 │               │        │
-│         ▼                 ▼                 ▼               ▼        │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │                    RPC FUNCTIONS                              │   │
-│  │  fetch_plans_near_me  •  join_plan  •  leave_plan            │   │
-│  │  cancel_plan  •  cleanup_expired_plans  •  fetch_nearest     │   │
-│  └──────────────────────────────────────────────────────────────┘   │
-└────────────────────────────────────────────────────────────────────────┘
+Client (React Native + Expo)
+├── HomeScreen      — Live plan feed with GPS filter
+├── CreateScreen    — Drop a plan with location picker  
+├── FavoritesScreen — Saved plans from Supabase
+└── ProfileScreen   — User profile + stats
+
+Supabase Backend
+├── plans           — Active plans with lat/lng
+├── users           — User profiles
+├── plan_joins      — Join records
+└── saved_plans     — Saved plan records
 ```
 
-### 🗄️ Database Schema
+## Quick Start
+
+```bash
+git clone https://github.com/Prathambihani24/showup-app.git
+cd showup-app
+npm install
+cp .env.example .env
+# Add your Supabase URL and anon key to .env
+npx expo start
+```
+
+## Database Setup
+
+Run in Supabase SQL Editor in order:
 
 ```sql
-profiles ──────┬────── plans ──────┬────── plan_joins
-               │                   │
-               │                   ├── saved_plans
-               │                   │
-               │                   ├── plan_messages (realtime)
-               │                   │
-               │                   └── reports
-               │
-               └──── expo_push_tokens
+-- 1. Create tables
+-- See supabase/migrations/ for full migration files
+
+-- 2. Disable RLS for development
+ALTER TABLE plans DISABLE ROW LEVEL SECURITY;
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE plan_joins DISABLE ROW LEVEL SECURITY;
+ALTER TABLE saved_plans DISABLE ROW LEVEL SECURITY;
 ```
 
-**Key indexes:**
-- `idx_plans_bvcoe_active_location` — Partial GiST on `location` WHERE `is_active=true AND campus='BVCOE Dhankawadi'`
-- `idx_plans_campus_active_location` — Partial GiST for all campuses
-- `idx_plans_location_gist` — Full GiST for map viewport queries
+## Status
 
----
+| Item | Status |
+|---|---|
+| Core feed + create + save | ✅ Working |
+| GPS-based distance | ✅ Working |
+| Supabase real-time DB | ✅ Working |
+| Authentication | 🔄 In progress |
+| Push notifications | ⏳ Planned |
+| APK build | ⏳ Planned |
+| Pune launch | 🚀 Soon |
 
-## 🚀 Quick Start
+## Waitlist
 
-### Prerequisites
-- Node 20+
-- Expo CLI: `npm i -g @expo/cli`
-- Supabase account (free tier works)
+Launching at BVCOE Pune. Join the waitlist:
+👉 [showup waitlist link]
 
-### 1. Clone & Install
-```bash
-git clone https://github.com/Prathambihani24/showup-app-.git
-cd showup-app-
-npm install --legacy-peer-deps
-```
+## Built By
 
-### 2. Environment
-```bash
-cp .env.example .env
-# Fill in your Supabase URL + anon key
-```
+Pratham Bihani — [@Prathambihani24](https://github.com/Prathambihani24)
 
-### 3. Database (one-time)
-Run these **in order** in Supabase SQL Editor:
-
-| Migration | Purpose |
-|-----------|---------|
-| `supabase/migrations/20260820000001_baseline.sql` | Tables, RLS, indexes, triggers |
-| `supabase/migrations/20260827_complete_fix_v2.sql` | Missing columns + spatial RPCs |
-| `supabase/migrations/20260827_plan_lifecycle_rpcs.sql` | join/leave/cancel + realtime |
-
-### 4. Run
-```bash
-# Development
-npx expo start
-
-# Web export (for waitlist page)
-npx expo export -p web
-```
-
----
-
-## 📡 RPC Reference
-
-### Spatial Queries
-```typescript
-// Plans near me (PostGIS KNN + radius)
-fetch_plans_near_me({
-  user_lat: number,
-  user_lng: number,
-  search_radius_m?: number,     // default 5000
-  result_limit?: number,        // default 20
-  campus_name?: string          // default 'BVCOE Dhankawadi'
-})
-
-// Paginated feed (cursor-based)
-fetch_plans_near_me_paginated({
-  user_lat, user_lng,
-  search_radius_m, result_limit,
-  cursor_distance_m?: number,   // for infinite scroll
-  campus_name
-})
-
-// Pure KNN (closest N)
-fetch_nearest_plans({ user_lat, user_lng, result_limit, campus_name })
-
-// Map viewport (bbox)
-fetch_plans_in_bbox({ min_lng, min_lat, max_lng, max_lat, result_limit, campus_name })
-```
-
-**Returns:** `id, user_id, user_name, activity, location_name, lat, lng, campus, category, time_label, starts_at, spots_total, spots_left, created_at, distance_m, joined_count, is_joined`
-
-### Plan Lifecycle (requires auth)
-```typescript
-join_plan(p_plan_id: uuid)     // Returns { ok, spots_left } or { ok, reason }
-leave_plan(p_plan_id: uuid)    // Returns { ok } or { ok, reason }
-cancel_plan(p_plan_id: uuid)   // Returns { ok } or { ok, reason }
-cleanup_expired_plans()        // Returns integer (count deactivated)
-```
-
-### Waitlist (public, no auth)
-```typescript
-join_waitlist({
-  p_email: string,
-  p_picks: string[],      // ["Football", "Chai run"]
-  p_wish: string,         // optional free-text
-  p_ref: string           // referral code from URL
-})
-// Returns { queue_pos, out_ref_code, referrals }
-```
-
----
-
-## 🎨 Waitlist Page
-
-Standalone static page at `/showup-waitlist/index.html` — deploys anywhere (Vercel, Netlify, GitHub Pages).
-
-**Features:**
-- 3-step signup: Email → Picks → Wish
-- Real queue position from Supabase
-- Unique referral code (`ABC123EF`)
-- WhatsApp share button (primary in India)
-- Offline fallback → localStorage
-- Dark/light palette switcher (persists)
-
-```bash
-# Deploy to Vercel
-npx vercel ./showup-waitlist
-
-# Or Netlify
-netlify deploy --dir=showup-waitlist
-```
-
----
-
-## 📦 Project Structure
-
-```
-showup-app/
-├── app/                    # Expo Router (if migrated) or legacy screens/
-├── screens/
-│   ├── HomeScreen.js       # Live feed + spatial queries
-│   ├── CreatePlanScreen.js # Drop a plan
-│   ├── ChatScreen.js       # Realtime messages
-│   ├── ProfileScreen.js    # User settings
-│   ├── FavoritesScreen.js  # Saved plans
-│   └── AuthScreen.js       # Campus email OTP
-├── lib/
-│   ├── supabase.js         # Client + auth config
-│   ├── spatial-queries.js  # PostGIS RPC wrappers
-│   ├── user.js             # Profile helpers
-│   └── theme.js            # Design tokens
-├── supabase/
-│   └── migrations/         # SQL migrations (run in order)
-├── showup-waitlist/        # Static landing page
-│   └── index.html
-├── .env.example
-├── package.json
-└── README.md
-```
-
----
-
-## 🔐 Security
-
-- **RLS enabled** on all tables
-- **Anon key** only: `EXPO_PUBLIC_SUPABASE_ANON_KEY` (no service role in client)
-- **Authenticated-only** reads on `plans`, `profiles`, `plan_messages`
-- **Owner-scoped** writes on `saved_plans`, `plan_joins`, `reports`
-- **Plan mutations** only via RPCs (atomic, race-free)
-
----
-
-## 🧪 Quality Gates
-
-```bash
-# All must pass before PR
-npx expo-doctor              # ✅ 18/18 checks
-npx expo export -p web       # ✅ Web build
-curl -I <supabase>/rest/v1/waitlist_signups  # ✅ RLS blocks anon SELECT
-```
-
----
-
-## 📈 Roadmap
-
-| Phase | Target | Status |
-|-------|--------|--------|
-| **Waitlist** | 400 BVCOE signups | 🔄 In progress |
-| **Soft Launch** | 50 DAU, seeded plans | ⏳ |
-| **Campus 2** | MIT WPU Kothrud | ⏳ |
-| **Monetization** | Venue partnerships (OpsLayer) | 💡 |
-
----
-
-## 🤝 Contributing
-
-1. Fork → Branch → PR
-2. `expo-doctor` must pass
-3. No secrets in commits
-4. Update migrations for schema changes
-
----
-
-## 📄 License
-
-MIT — Built with ☕ at BVCOE Pune by [Pratham Bihani](https://github.com/Prathambihani24)
-
----
-
-<p align="center">
-  <strong>Made in Pune 🇮🇳</strong><br>
-  <sub>Launching first at BVCOE Dhankawadi</sub>
-</p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&duration=3000&pause=1000&color=7C3AED&center=true&vCenter=true&width=600&lines=Drop+a+plan.;Nearby+students+join.;Spots+fill.;Chat+opens.;People+stand+there." />
-</p>
+**Made in India 🇮🇳**
