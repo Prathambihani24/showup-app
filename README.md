@@ -108,7 +108,7 @@ ALTER TABLE saved_plans DISABLE ROW LEVEL SECURITY;
 ## Waitlist
 
 Launching at BVCOE Pune. Join the waitlist:
-👉 [showup waitlist link]
+👉 [showup waitlist](https://prathambihani24.github.io/showup-app/)
 
 ## Built By
 
