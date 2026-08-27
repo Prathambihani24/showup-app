@@ -1,8 +1,6 @@
 <div align="center">
   <img src="assets/banner.gif" alt="showup banner" width="100%"/>
   
-  <img src="assets/logo.png" alt="showup logo" width="200"/>
-  
   # showup.
   
   **Drop a plan. Nearby students join before spots fill.**
