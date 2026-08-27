@@ -493,9 +493,10 @@ $('signup').addEventListener('submit',async ev=>{
   const r=await submitSignup({email:$('email').value,picks:[...sel],wish:$('wish').value});
   btn.disabled=false;btn.textContent='Claim my spot ⚡';
   $('pos').textContent=r.pos;
-  const slug=$('email').value.split('@')[0].replace(/[^a-z0-9]/gi,'').toLowerCase();
-  $('shareTxt').value=r.ref?('showup.app/?ref_id='+r.ref):('showup.app/i/'+slug+'-'+r.pos.toString(36));
-  $('waBtn').href='https://wa.me/?text='+encodeURIComponent("I'm founding member #"+r.pos+' on Showup ⚡ Who\'s down right now? Claim your spot before they\'re gone: '+$('shareTxt').value);
+    const slug=$('email').value.split('@')[0].replace(/[^a-z0-9]/gi,'').toLowerCase();
+    const baseUrl = 'https://prathambihani24.github.io/showup-app/';
+    $('shareTxt').value=r.ref?(baseUrl+'?ref_id='+r.ref):(baseUrl+'i/'+slug+'-'+r.pos.toString(36));
+    $('waBtn').href='https://wa.me/?text='+encodeURIComponent("I'm founding member #"+r.pos+' on Showup ⚡ Who\\'s down right now? Claim your spot before they\\'re gone: '+$('shareTxt').value);
   $('fine').innerHTML=r.fallback
     ? '⚠️ Saved offline — run waitlist_migration.sql in Supabase, then resubmit.'
     : '✅ You’re in. Every friend who joins via your link moves you up the queue.';
