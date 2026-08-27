@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/logo.png" alt="showup logo" width="200"/>
   
-  # showup.
+  # showup
   
   **Drop a plan. Nearby students join before spots fill.**
   
