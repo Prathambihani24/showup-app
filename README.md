@@ -102,19 +102,6 @@ ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE plan_joins DISABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_plans DISABLE ROW LEVEL SECURITY;
 ```
-
-## Status
-
-| Item | Status |
-|---|---|
-| Core feed + create + save | ✅ Working |
-| GPS-based distance | ✅ Working |
-| Supabase real-time DB | ✅ Working |
-| Authentication | 🔄 In progress |
-| Push notifications | ⏳ Planned |
-| APK build | ⏳ Planned |
-| Pune launch | 🚀 Soon |
-
 ## Waitlist
 
 Launching at BVCOE Pune. Join the waitlist:
