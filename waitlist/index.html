@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showup — Who's down right now?</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C10.2 2 5.5 6.7 5.5 12.5c0 8.2 10.5 17 10.5 17s10.5-8.8 10.5-17C26.5 6.7 21.8 2 16 2z' fill='%238B5CF6'/%3E%3Ccircle cx='16' cy='12.5' r='4.5' fill='%230D0B14'/%3E%3C/svg%3E">
+<meta property="og:title" content="Showup — Who's down right now?">
+<meta property="og:description" content="Every real plan happening near your campus in the next few hours. Join before the spots are gone. Launching first at BVCOE Dhankawadi.">
+<meta property="og:image" content="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* ---------- TOKENS ---------- */
+:root{
+  --bg:#0D0B14;
+  --surface:#151021;
+  --surface-2:#1C1630;
+  --ink:#F5F2FF;
+  --muted:#9C93B8;
+  --line:rgba(245,242,255,.09);
+  --acc:#8B5CF6;
+  --glow:#C084FC;
+  --on-acc:#FFFFFF;
+  --warn:#FFB03A;
+  --ok:#4ADE80;
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --font-d:"Bricolage Grotesque",sans-serif;
+  --font-b:"Space Grotesk",sans-serif;
+}
+[data-pal="ember"]{ --acc:#FF6B35; --glow:#FFB259; }
+[data-pal="volt"]{ --acc:#CDFA4E; --glow:#9BFF57; --on-acc:#0D0B14; }
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--font-b);font-size:16px;line-height:1.55;
+  overflow-x:hidden;
+}
+::selection{background:var(--acc);color:var(--on-acc)}
+
+/* soft aurora field — background depth, no glassmorphism */
+body::before{
+  content:"";position:fixed;inset:-30% -10% auto -10%;height:110vh;z-index:-2;
+  background:
+    radial-gradient(52vw 52vh at 78% 12%, color-mix(in srgb,var(--acc) 22%,transparent), transparent 62%),
+    radial-gradient(40vw 44vh at 12% 82%, color-mix(in srgb,var(--glow) 13%,transparent), transparent 60%);
+  filter:saturate(1.05);pointer-events:none;
+}
+/* film grain */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap{width:min(1140px,calc(100% - 48px));margin:0 auto}
+
+/* ---------- NAV ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.wordmark{height:30px;width:auto;display:block}
+.top .by{color:var(--muted);font-size:13.5px}
+
+/* ---------- HERO ---------- */
+.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:64px;align-items:center;padding:38px 0 84px}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);
+  background:color-mix(in srgb,var(--surface) 70%,transparent);
+}
+.pill b{color:var(--ink);font-weight:600}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+h1{
+  font-family:var(--font-d);font-weight:750;line-height:.98;letter-spacing:-.02em;
+  font-size:clamp(54px,7.4vw,102px);margin:22px 0 20px;text-wrap:balance;
+}
+h1 .grad{
+  background:linear-gradient(94deg,var(--acc) 8%,var(--glow) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sub{color:var(--muted);font-size:18.5px;max-width:47ch;margin-bottom:32px}
+.sub b{color:var(--ink);font-weight:500}
+
+/* ---------- SIGNUP CARD (multi-step) ---------- */
+.card{
+  border:1px solid var(--line);border-radius:var(--r-lg);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 88%,transparent),color-mix(in srgb,var(--bg) 60%,transparent));
+  padding:26px 26px 22px;max-width:520px;box-shadow:0 24px 60px -30px rgb(0 0 0 /.65);
+}
+.steps{display:flex;gap:6px;margin-bottom:18px}
+.steps i{flex:1;height:4px;border-radius:99px;background:var(--line)}
+.steps i.on{background:var(--acc)}
+.field-label{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;display:block}
+input[type=email],select,textarea{
+  width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:14px 16px;color:var(--ink);font-family:var(--font-b);font-size:15.5px;outline:none;
+  transition:border-color .15s;
+}
+textarea{resize:none;height:74px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239C93B8' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.row-2{display:grid;grid-template-columns:1fr auto;gap:12px}
+
+.btn{
+  cursor:pointer;border:none;border-radius:var(--r-sm);padding:14px 22px;
+  font-family:var(--font-b);font-weight:600;font-size:15.5px;
+  background:var(--acc);color:var(--on-acc);
+  transition:transform .12s,box-shadow .2s,filter .15s;
+  box-shadow:0 10px 26px -10px color-mix(in srgb,var(--acc) 65%,transparent);
+}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px solid var(--line)}
+.btn.wide{width:100%;margin-top:14px}
+a.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin:6px 0 4px}
+.chip{
+  border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:14px;
+  color:var(--muted);cursor:pointer;background:var(--surface-2);user-select:none;
+  transition:all .13s;
+}
+.chip:hover{border-color:var(--acc);color:var(--ink)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc);font-weight:600}
+
+/* success view */
+.pos-big{font-family:var(--font-d);font-weight:800;font-size:72px;line-height:1;
+  background:linear-gradient(120deg,var(--acc),var(--glow));-webkit-background-clip:text;background-clip:text;color:transparent}
+.share-link{
+  display:flex;gap:10px;margin-top:18px;
+}
+.share-link input{font-size:13.5px;color:var(--muted)}
+.fineprint{font-size:12.5px;color:var(--muted);margin-top:14px;display:flex;gap:8px;align-items:center}
+.hide{display:none!important}
+.err{color:#FB7185;font-size:13px;margin-top:8px}
+
+/* ---------- PHONE MOCKUP ---------- */
+.phone-col{display:flex;justify-content:center;position:relative}
+.phone{
+  width:330px;border-radius:46px;border:1px solid rgba(255,255,255,.14);
+  background:#000;padding:12px;box-shadow:0 50px 100px -40px color-mix(in srgb,var(--acc) 45%,rgb(0 0 0/.8)),0 0 0 1px rgb(0 0 0/.6);
+  transform:rotate(2.2deg);
+}
+.screen{border-radius:36px;overflow:hidden;background:linear-gradient(175deg,#171225 0%,#0E0B17 100%);padding:18px 16px 14px;min-height:600px;position:relative}
+.notch{width:106px;height:26px;background:#000;border-radius:99px;margin:2px auto 16px}
+.ph-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.ph-head h3{font-family:var(--font-d);font-size:19px;font-weight:700}
+.ph-head span{font-size:11.5px;color:var(--muted)}
+.ph-sub{color:var(--muted);font-size:12px;margin-bottom:14px;display:flex;gap:6px;align-items:center}
+.plan{
+  border:1px solid var(--line);border-radius:var(--r-md);padding:14px;margin-bottom:11px;
+  background:rgba(255,255,255,.032);animation:rise .6s backwards ease-out;
+}
+.plan:nth-child(odd){animation-delay:.15s}.plan:nth-child(even){animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.plan h4{font-family:var(--font-d);font-size:15px;font-weight:650;margin-bottom:7px}
+.meta{display:flex;gap:7px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.meta span{border:1px solid var(--line);border-radius:99px;padding:3px 9px}
+.spots{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)!important;font-weight:600}
+.joinbar{display:flex;justify-content:space-between;align-items:center;margin-top:11px}
+.jb-btn{background:var(--acc);color:var(--on-acc);font-size:11.5px;font-weight:700;border-radius:99px;padding:7px 15px}
+.faces{display:flex}
+.face{width:22px;height:22px;border-radius:50%;border:2px solid #14101f;margin-left:-7px;
+  display:grid;place-items:center;font-size:9px;font-weight:700;color:#fff}
+.face:first-child{margin-left:0}
+.toast{
+  position:absolute;top:96px;left:50%;transform:translateX(-50%);
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+  font-size:11.5px;padding:8px 14px;border-radius:99px;white-space:nowrap;
+  opacity:0;animation:toastpop 5.5s infinite 2s;
+}
+.toast b{color:var(--glow)}
+@keyframes toastpop{4%,16%{opacity:1;transform:translateX(-50%) translateY(0)}20%,100%{opacity:0;transform:translateX(-50%) translateY(-8px)}}
+.tabbar{display:flex;justify-content:space-around;padding-top:12px;margin-top:4px;border-top:1px solid var(--line);font-size:16px}
+.tabbar i{opacity:.42;font-style:normal}
+.tabbar i.on{opacity:1}
+.float-chip{
+  position:absolute;left:-46px;bottom:118px;transform:rotate(-3deg);
+  background:var(--acc);color:var(--on-acc);font-family:var(--font-d);font-weight:700;
+  font-size:13.5px;padding:11px 17px;border-radius:var(--r-md);
+  box-shadow:0 18px 44px -12px color-mix(in srgb,var(--acc) 70%,transparent);
+}
+@media(prefers-reduced-motion:no-preference){
+  .float-chip{animation:bob 5s ease-in-out infinite}
+  @keyframes bob{50%{transform:rotate(-3deg) translateY(-9px)}}
+}
+
+/* ---------- HOW IT WORKS ---------- */
+.how{padding:76px 0;border-top:1px solid var(--line)}
+.kicker{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--glow);font-weight:600}
+.how h2,.queue h2{font-family:var(--font-d);font-weight:720;font-size:clamp(34px,4.4vw,54px);letter-spacing:-.015em;margin:12px 0 40px;text-wrap:balance}
+.step{
+  display:grid;grid-template-columns:150px 1fr 260px;gap:28px;align-items:baseline;
+  padding:30px 6px;border-bottom:1px solid var(--line);
+}
+.step:last-child{border-bottom:none}
+.step .n{font-family:var(--font-d);font-weight:800;font-size:64px;line-height:1;color:transparent;-webkit-text-stroke:1.6px var(--acc)}
+.step h3{font-family:var(--font-d);font-size:23px;font-weight:680;margin-bottom:6px}
+.step p{color:var(--muted);font-size:15.5px;max-width:52ch}
+.step .side{font-size:13px;color:var(--muted);text-align:right}
+.step .side b{display:block;color:var(--ink);font-size:14.5px}
+
+/* ---------- QUEUE MECHANIC ---------- */
+.queue{padding:76px 0 90px;border-top:1px solid var(--line)}
+.rail{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:stretch;margin-top:46px}
+.node{border:1px solid var(--line);border-radius:var(--r-md);padding:20px;background:color-mix(in srgb,var(--surface) 75%,transparent)}
+.node .tag{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.node .big{font-family:var(--font-d);font-weight:780;font-size:34px}
+.node .d{font-size:13px;color:var(--muted);margin-top:5px}
+.node.win{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset,0 14px 40px -18px color-mix(in srgb,var(--acc) 55%,transparent)}
+.arrow{align-self:center;color:var(--glow);font-size:20px}
+.q-note{margin-top:20px;font-size:14px;color:var(--muted)}
+.q-note b{color:var(--ink)}
+
+/* ---------- FOUNDER NOTE ---------- */
+.founder{border-top:1px solid var(--line);padding:70px 0}
+.founder .card{max-width:640px;font-size:16.5px;line-height:1.7}
+.founder p+p{margin-top:14px}
+.sig{margin-top:20px;display:flex;align-items:center;gap:14px}
+.avx{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--glow));
+  display:grid;place-items:center;font-family:var(--font-d);font-weight:800;color:var(--on-acc)}
+.sig .n1{font-weight:600}
+.sig .n2{font-size:13px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);padding:26px 0 34px;display:flex;justify-content:space-between;color:var(--muted);font-size:13px;flex-wrap:wrap;gap:10px}
+footer a{color:var(--muted)}
+
+/* ---------- TWEAKS PANEL ---------- */
+.tweaks{
+  position:fixed;right:18px;bottom:18px;z-index:50;
+  border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(8px);padding:12px 14px;display:flex;align-items:center;gap:12px;
+}
+.tweaks .lb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
+.sw:hover{transform:scale(1.12)}
+.sw.on{border-color:var(--ink)}
+.sw.v{background:linear-gradient(135deg,#8B5CF6,#C084FC)}
+.sw.e{background:linear-gradient(135deg,#FF6B35,#FFB259)}
+.sw.l{background:linear-gradient(135deg,#CDFA4E,#9BFF57)}
+
+/* reveal — only hidden when JS is confirmed running */
+.js .rv{opacity:0;transform:translateY(18px);transition:all .6s cubic-bezier(.2,.7,.3,1)}
+.js .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.plan,.toast,.dot-live{animation:none}}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;gap:56px;padding-bottom:64px}
+  .phone{transform:none;width:310px}
+  .step{grid-template-columns:74px 1fr;row-gap:8px}
+  .step .n{font-size:44px}
+  .step .side{grid-column:2;text-align:left;margin-top:4px}
+  .rail{grid-template-columns:1fr}
+  .arrow{transform:rotate(90deg);justify-self:center}
+  .float-chip{left:auto;right:-8px}
+}
+</style>
+</head>
+<body data-pal="violet">
+
+<div class="wrap">
+  <nav class="top">
+    <!-- wordmark recreated from assets/logo.png: cream letters, violet pin as the "o", tip drops below baseline -->
+    <a class="logo" href="#" aria-label="Showup home">
+      <svg class="wordmark" viewBox="0 0 152 44" role="img" aria-hidden="true">
+        <g fill="var(--ink)" font-family="var(--font-d)" font-weight="800" font-size="40" letter-spacing="-1">
+          <text x="0" y="34">sh</text>
+          <text x="68" y="34">wup</text>
+        </g>
+        <g transform="translate(47,1)">
+          <path d="M9 34 C9 34 18 24.5 18 16.5 C18 10.7 14 6 9 6 C4 6 0 10.7 0 16.5 C0 24.5 9 34 9 34 Z" fill="var(--acc)"/>
+          <circle cx="9" cy="15.5" r="4.6" fill="var(--bg)"/>
+        </g>
+      </svg>
+    </a>
+    <div class="by">built by a BVCOE senior, for BVCOE</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="pill rv"><span class="dot-live"></span>&nbsp;Launching first at&nbsp;<b>BVCOE Dhankawadi</b></div>
+      <h1 class="rv">Who's down<br><span class="grad">right now?</span></h1>
+      <p class="sub rv">Group chats die. Plans stay abstract. Showup shows you <b>every real plan happening near you in the next few hours</b> — chai runs, football, gym crews, study squads — and lets you join before the spots are gone.</p>
+
+      <!-- SIGNUP CARD -->
+      <form class="card rv" id="signup" autocomplete="off">
+        <div class="steps"><i class="on"></i><i></i><i></i></div>
+
+        <!-- STEP 1 -->
+        <div id="s1">
+          <label class="field-label" for="email">Your email</label>
+          <input type="email" id="email" placeholder="you@bvcoe.ac.in" required>
+          <p class="err hide" id="e1">Enter a valid email.</p>
+          <button class="btn wide" type="button" onclick="goStep2()">Next →</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="s2" class="hide">
+          <label class="field-label">What would you drop a plan for tonight?</label>
+          <div class="chips" id="chips">
+            <span class="chip">⚽ Football</span><span class="chip">☕ Chai run</span>
+            <span class="chip">💪 Gym crew</span><span class="chip">📚 Study squad</span>
+            <span class="chip">🍔 Food hunt</span><span class="chip">🌙 Night walk</span>
+            <span class="chip">🏏 Cricket</span><span class="chip">🎬 Movie</span>
+          </div>
+          <label class="field-label" style="margin-top:16px" for="wish">Anything else? (optional)</label>
+          <textarea id="wish" placeholder="tell us what we're missing…"></textarea>
+          <div class="row-2" style="margin-top:14px">
+            <button class="btn ghost" type="button" onclick="back()">← Back</button>
+            <button class="btn" type="submit">Claim my spot ⚡</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 : SUCCESS -->
+        <div id="s3" class="hide" style="text-align:center;padding:6px 0 2px">
+          <div class="tag" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">you're on the list ·</div>
+          <div class="pos-big">#<span id="pos">214</span></div>
+          <p style="color:var(--muted);font-size:14.5px;margin-top:6px">Founding member status locked.<br>Bring friends — every friend pulls you up the queue.</p>
+          <div class="share-link">
+            <input readonly value="showup.app/i/pratham-fc" id="shareTxt">
+            <button class="btn ghost" type="button" id="copyBtn" style="white-space:nowrap">Copy</button>
+          </div>
+          <a class="btn wa" id="waBtn" href="#" target="_blank" rel="noopener" style="width:100%;margin-top:12px;text-decoration:none;display:block;text-align:center">
+            Share on WhatsApp
+          </a>
+        </div>
+
+        <div class="fineprint" id="fine">🔒 No spam, ever · first <b>&nbsp;500&nbsp;</b> get founding-member perks</div>
+      </form>
+    </div>
+
+    <!-- PHONE MOCKUP -->
+    <div class="phone-col rv">
+      <div class="float-chip">2 spots left 🔥</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="ph-head"><h3>Near you</h3><span>BVCOE · now</span></div>
+          <div class="ph-sub"><span class="dot-live"></span> 12 plans live within 2 km</div>
+
+          <div class="plan">
+            <h4>Futsal at ground 2, quick match</h4>
+            <div class="meta"><span>⏱ 6:00 PM</span><span>📍 800 m</span><span class="spots">2 spots left</span></div>
+            <div class="joinbar">
+              <div class="faces"><span class="face" style="background:#6D28D9">A</span><span class="face" style="background:#2563EB">R</span><span class="face" style="background:#059669">K</span><span class="face" style="background:#334155">+3</span></div>
+              <span class="jb-btn">Join</span>
+            </div>
+          </div>
+
+          <div class="plan">
+            <h4>Chai + Maggie run, tapri beside canteen</h4>
+            <div class="meta"><span>⏱ 5:30 PM</span><span>📍 350 m</span><span>5 spots</span></div>
+            <div class="joinbar">
+              <div class="faces"><span class="face" style="background:#DB2777">S</span><span class="face" style="background:#CA8A04">M</span></div>
+              <span class="jb-btn">Join</span>
+            </div>
+          </div>
+
+          <div class="plan">
+            <h4>DLD revision circle, library corner table</h4>
+            <div class="meta"><span>⏱ 7:00 PM</span><span>📍 1.1 km</span><span>3 spots</span></div>
+            <div class="joinbar">
+              <div class="faces"><span class="face" style="background:#DC2626">P</span><span class="face" style="background:#0D9488">J</span></div>
+              <span class="jb-btn">Join</span>
+            </div>
+          </div>
+
+          <div class="tabbar"><i class="on">⚡</i><i>＋</i><i>♡</i><i>◯</i></div>
+          <div class="toast">🎉 <b>Aarav</b> joined your futsal plan</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="kicker rv">How tonight works</div>
+    <h2 class="rv">From dead group chat<br>to people standing there.</h2>
+    <div class="step rv">
+      <div class="n">01</div>
+      <div><h3>Drop the plan</h3><p>One line, one time, a few spots. Takes 20 seconds. No followers needed — it goes straight to everyone on your campus nearby.</p></div>
+      <div class="side"><b>"Football at ground 2"</b>6 PM · 6 spots</div>
+    </div>
+    <div class="step rv">
+      <div class="n">02</div>
+      <div><h3>People nearby see it instantly</h3><p>Nearest-first feed. Plans expire in hours, so the feed is always "right now" — never yesterday's leftovers.</p></div>
+      <div class="side"><b>12 plans live near you</b>sorted by distance</div>
+    </div>
+    <div class="step rv">
+      <div class="n">03</div>
+      <div><h3>Tap join before spots fill</h3><p>Spots are limited on purpose. Chat opens the moment someone joins, so nobody shows up confused about where "ground 2" is.</p></div>
+      <div class="side"><b>Full = gone</b>FOMO does the pushing</div>
+    </div>
+  </section>
+
+  <!-- QUEUE MECHANIC -->
+  <section class="queue">
+    <div class="kicker rv">The queue</div>
+    <h2 class="rv">Invite. Skip the line. Repeat.</h2>
+    <div class="rail rv">
+      <div class="node"><div class="tag">Step 1</div><div class="big">Join the list</div><div class="d">Free. Your position locks in today.</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="tag">Step 2</div><div class="big">Share your link</div><div class="d">Send it to your hostel &amp; class groups.</div></div>
+      <div class="arrow">→</div>
+      <div class="node win"><div class="tag">Step 3</div><div class="big">Jump ahead</div><div class="d">Each friend who joins pulls you up the queue.</div></div>
+    </div>
+    <p class="q-note">Only <b>the first 500</b> get in on day one, founding-member badge included. After launch, invites unlock week by week per campus.</p>
+  </section>
+
+  <!-- FOUNDER NOTE -->
+  <section class="founder">
+    <div class="kicker rv" style="margin-bottom:18px">Why I'm building this</div>
+    <div class="card rv">
+      <p>I've watched 15,000 students stand 200 metres apart doing the exact same boring evening, every day, because nobody had a way to shout "I'm going right now — who else?"</p>
+      <p>Showup is that shout. We're launching with one campus and making sure the first people in never open an empty app. If you sign up early, you're not a user — you're setting the culture.</p>
+      <div class="sig">
+        <div class="avx">PB</div>
+        <div><div class="n1">Pratham Bihani</div><div class="n2">Final-year CS, BVCOE Pune · Founder</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© Showup 2026 · Made in Pune 🇮🇳</span>
+    <span><a href="mailto:prathambihani951@gmail.com">prathambihani951@gmail.com</a></span>
+  </footer>
+</div>
+
+<!-- TWEAKS -->
+<aside class="tweaks">
+  <span class="lb">Palette</span>
+  <span class="sw v on" data-set="violet" title="Violet Dusk"></span>
+  <span class="sw e" data-set="ember" title="Ember"></span>
+  <span class="sw l" data-set="volt" title="Volt"></span>
+</aside>
+
+<script>
+// ----- multi-step signup -----
+const $=id=>document.getElementById(id);
+const steps=document.querySelectorAll('.steps i');
+let sel=new Set();
+document.querySelectorAll('#chips .chip').forEach(c=>c.onclick=()=>{
+  c.classList.toggle('on');
+  c.classList.contains('on')?sel.add(c.textContent):sel.delete(c.textContent);
+});
+function show(n){
+  $('s1').classList.toggle('hide',n!==1);
+  $('s2').classList.toggle('hide',n!==2);
+  $('s3').classList.toggle('hide',n!==3);
+  steps.forEach((el,i)=>el.classList.toggle('on',i<n));
+}
+function goStep2(){
+  const em=$('email').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ $('e1').classList.remove('hide'); return; }
+  $('e1').classList.add('hide'); show(2);
+}
+function back(){ show(1); }
+
+// ----- signup: REAL Supabase backend (demo fallback if fetch fails) -----
+const SUPABASE_URL='https://nyqjraaggqwehuxhqajz.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55cWpyYWFnZ3F3ZWh1eGhxYWp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkwMzksImV4cCI6MjA5NzYxNTAzOX0.gCCI2dUdt2o9hd0dgbzaITjQWcq8dnhnTzMLGl4hZFU';
+const refFromUrl=new URLSearchParams(location.search).get('ref_id');
+
+async function submitSignup(d){
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/rpc/join_waitlist',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON},
+      body:JSON.stringify({p_email:d.email,p_picks:d.picks,p_wish:d.wish,p_ref:refFromUrl})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const j=(await res.json())[0];
+    return {pos:j.queue_pos,ref:j.out_ref_code,referrals:j.referrals};
+  }catch(e){
+    // network/SQL not-yet-applied fallback: keep UX alive, flag it
+    const list=JSON.parse(localStorage.getItem('showup_waitlist')||'[]');
+    list.push({...d,at:Date.now()});
+    localStorage.setItem('showup_waitlist',JSON.stringify(list));
+    return {pos:list.length+200,ref:null,referrals:0,fallback:true};
+  }
+}
+$('signup').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const btn=$('signup').querySelector('button.btn:last-of-type')||$('signup').querySelector('button:not(.ghost)');
+  btn.disabled=true;btn.textContent='Joining…';
+  const r=await submitSignup({email:$('email').value,picks:[...sel],wish:$('wish').value});
+  btn.disabled=false;btn.textContent='Claim my spot ⚡';
+  $('pos').textContent=r.pos;
+  const slug=$('email').value.split('@')[0].replace(/[^a-z0-9]/gi,'').toLowerCase();
+  $('shareTxt').value=r.ref?('showup.app/?ref_id='+r.ref):('showup.app/i/'+slug+'-'+r.pos.toString(36));
+  $('waBtn').href='https://wa.me/?text='+encodeURIComponent("I'm founding member #"+r.pos+' on Showup ⚡ Who\'s down right now? Claim your spot before they\'re gone: '+$('shareTxt').value);
+  $('fine').innerHTML=r.fallback
+    ? '⚠️ Saved offline — run waitlist_migration.sql in Supabase, then resubmit.'
+    : '✅ You’re in. Every friend who joins via your link moves you up the queue.';
+  show(3);
+});
+$('copyBtn').onclick=()=>{
+  navigator.clipboard&&navigator.clipboard.writeText($('shareTxt').value);
+  $('copyBtn').textContent='Copied ✓'; setTimeout(()=>$('copyBtn').textContent='Copy',1600);
+};
+
+// ----- palette switcher (persists) -----
+const savedPal=localStorage.getItem('showup_pal');
+if(savedPal){ document.body.dataset.pal=savedPal; syncSw(); }
+document.querySelectorAll('.sw').forEach(s=>s.onclick=()=>{
+  document.body.dataset.pal=s.dataset.set;
+  localStorage.setItem('showup_pal',s.dataset.set);
+  syncSw();
+});
+function syncSw(){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.dataset.set===document.body.dataset.pal));
+}
+
+// ----- scroll reveal -----
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&(e.target.classList.add('in'),io.unobserve(e.target))),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+// safety net: never leave content hidden (slow crawlers, print, odd viewports)
+setTimeout(()=>document.querySelectorAll('.rv:not(.in)').forEach(el=>el.classList.add('in')),1800);
+</script>
+</body>
+</html>
