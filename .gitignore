@@ -42,3 +42,5 @@ yarn-error.*
 
 # env
 .env
+AGENTS.md
+CLAUDE.md
